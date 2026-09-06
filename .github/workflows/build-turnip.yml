@@ -21,6 +21,7 @@ jobs:
           python3 -m pip install --break-system-packages meson
 
       - name: Setup Android NDK
+        id: setup-ndk
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r26d
@@ -32,12 +33,14 @@ jobs:
 
       - name: Generate Meson Cross File
         run: |
-          cat << 'EOF' > android-aarch64.ini
+          NDK_PATH="${ANDROID_NDK_HOME:-$ANDROID_NDK_LATEST_HOME}"
+          echo "Using NDK at: $NDK_PATH"
+          cat << EOF > android-aarch64.ini
           [binaries]
-          c = '${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android31-clang'
-          cpp = '${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android31-clang++'
-          ar = '${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'
-          strip = '${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'
+          c = '$NDK_PATH/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android31-clang'
+          cpp = '$NDK_PATH/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android31-clang++'
+          ar = '$NDK_PATH/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'
+          strip = '$NDK_PATH/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'
           pkg-config = 'false'
 
           [host_machine]
@@ -46,6 +49,7 @@ jobs:
           cpu = 'armv8-a'
           endian = 'little'
           EOF
+          cat android-aarch64.ini
 
       - name: Configure and Build
         run: |
