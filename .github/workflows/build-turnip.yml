@@ -61,7 +61,7 @@ jobs:
             -Dgallium-drivers= \
             -Dvulkan-drivers=freedreno \
             -Dfreedreno-kmds=kgsl \
-            -Db_lto=true \
+            -Db_lto=false \
             -Dstrip=true
 
           ninja -C build-turnip src/freedreno/vulkan/vulkan.freedreno.so
