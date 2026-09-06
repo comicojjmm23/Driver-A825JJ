@@ -76,12 +76,14 @@ jobs:
             -Db_lto=false \
             -Dstrip=true
 
-          ninja -C build-turnip src/freedreno/vulkan/vulkan.freedreno.so
+          ninja -C build-turnip
 
       - name: Package Driver
         run: |
           mkdir -p driver_package
-          cp build-turnip/src/freedreno/vulkan/vulkan.freedreno.so driver_package/vulkan.adreno.so
+          SO_PATH=$(find build-turnip -name "libvulkan_freedreno.so" -o -name "vulkan.freedreno.so" | head -n 1)
+          echo "Found compiled library at: $SO_PATH"
+          cp "$SO_PATH" driver_package/vulkan.adreno.so
           
           cat << 'EOF' > driver_package/meta.json
           {
