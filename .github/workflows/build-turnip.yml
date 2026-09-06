@@ -13,11 +13,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y meson ninja-build python3-mako python3-yaml \
+          sudo apt-get install -y ninja-build python3-pip python3-mako python3-yaml \
             bison flex libx11-dev libxext-dev libxfixes-dev libxcb-glx0-dev \
             libxcb-shm0-dev libx11-xcb-dev libxcb-dri2-0-dev libxcb-dri3-dev \
             libxcb-present-dev libxshmfence-dev libxrandr-dev gettext \
             glslang-tools zip
+          python3 -m pip install --break-system-packages meson
 
       - name: Setup Android NDK
         uses: nttld/setup-ndk@v1
@@ -37,7 +38,7 @@ jobs:
           cpp = '${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android31-clang++'
           ar = '${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'
           strip = '${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'
-          pkgconfig = 'false'
+          pkg-config = 'false'
 
           [host_machine]
           system = 'android'
