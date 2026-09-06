@@ -76,12 +76,13 @@ jobs:
             -Db_lto=false \
             -Dstrip=true
 
-          ninja -C build-turnip
+          # Compilar el target exacto del driver Turnip sin dependencias de libarchive
+          ninja -C build-turnip src/freedreno/vulkan/vulkan_freedreno
 
       - name: Package Driver
         run: |
           mkdir -p driver_package
-          SO_PATH=$(find build-turnip -name "libvulkan_freedreno.so" -o -name "vulkan.freedreno.so" | head -n 1)
+          SO_PATH=$(find build-turnip -name "vulkan_freedreno.so" -o -name "libvulkan_freedreno.so" -o -name "vulkan.freedreno.so" | head -n 1)
           echo "Found compiled library at: $SO_PATH"
           cp "$SO_PATH" driver_package/vulkan.adreno.so
           
