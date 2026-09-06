@@ -27,9 +27,9 @@ jobs:
           ndk-version: r26d
           add-to-path: true
 
-      - name: Clone Mesa Main
+      - name: Clone Mesa Gen8 Branch
         run: |
-          git clone --depth 1 https://gitlab.freedesktop.org/mesa/mesa.git mesa-src
+          git clone --depth 1 --branch turnip/gen8 https://github.com/whitebelyash/mesa_unified.git mesa-src
 
       - name: Generate Meson Cross File
         run: |
@@ -48,6 +48,10 @@ jobs:
           cpu_family = 'aarch64'
           cpu = 'armv8-a'
           endian = 'little'
+
+          [built-in options]
+          c_args = ['-O3', '-DNDEBUG', '-fomit-frame-pointer', '-march=armv8.2-a+fp16']
+          cpp_args = ['-O3', '-DNDEBUG', '-fomit-frame-pointer', '-march=armv8.2-a+fp16']
           EOF
           cat android-aarch64.ini
 
@@ -56,6 +60,8 @@ jobs:
           meson setup build-turnip mesa-src \
             --cross-file android-aarch64.ini \
             -Dbuildtype=release \
+            -Doptimization=3 \
+            -Db_ndebug=true \
             -Dplatforms=android \
             -Dplatform-sdk-version=31 \
             -Dgallium-drivers= \
@@ -73,22 +79,22 @@ jobs:
           
           cat << 'EOF' > driver_package/meta.json
           {
-            "name": "Turnip Adreno 825 JJ Custom",
-            "description": "Compilado para Adreno 825 / 8xx optimizado para BotW",
+            "name": "Turnip Adreno 825 JJ Custom O3",
+            "description": "Compilado desde rama turnip/gen8 con optimizaciones O3 para BotW",
             "author": "comicojjmm23",
             "packageVersion": "1",
-            "vendor": "Mesa",
-            "driverVersion": "Custom-A825",
+            "vendor": "Mesa/whitebelyash",
+            "driverVersion": "Gen8-v31-A825",
             "minApi": 31,
             "libraryName": "vulkan.adreno.so"
           }
           EOF
 
           cd driver_package
-          zip -r ../Turnip-A825-BotW.zip .
+          zip -r ../Turnip-A825-JJ-BotW.zip .
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Turnip-A825-BotW
-          path: Turnip-A825-BotW.zip
+          name: Turnip-A825-JJ-BotW
+          path: Turnip-A825-JJ-BotW.zip
