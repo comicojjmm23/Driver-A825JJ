@@ -29,7 +29,7 @@ jobs:
 
       - name: Clone Mesa Gen8 Branch
         run: |
-          git clone --depth 1 --branch turnip/gen8 https://github.com/whitebelyash/mesa_unified.git mesa-src
+          git clone --depth 1 --branch turnip/gen8 https://github.com/whitebelyash/mesa-unified.git mesa-src
 
       - name: Generate Meson Cross File
         run: |
