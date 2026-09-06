@@ -17,7 +17,7 @@ jobs:
             bison flex libx11-dev libxext-dev libxfixes-dev libxcb-glx0-dev \
             libxcb-shm0-dev libx11-xcb-dev libxcb-dri2-0-dev libxcb-dri3-dev \
             libxcb-present-dev libxshmfence-dev libxrandr-dev gettext \
-            glslang-tools zip
+            glslang-tools zip pkg-config
           python3 -m pip install --break-system-packages meson
 
       - name: Setup Android NDK
@@ -41,7 +41,7 @@ jobs:
           cpp = '$NDK_PATH/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android31-clang++'
           ar = '$NDK_PATH/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'
           strip = '$NDK_PATH/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'
-          pkg-config = 'false'
+          pkg-config = '/usr/bin/pkg-config'
 
           [host_machine]
           system = 'android'
@@ -64,6 +64,7 @@ jobs:
             -Db_ndebug=true \
             -Dplatforms=android \
             -Dplatform-sdk-version=31 \
+            -Dandroid-stub=true \
             -Dgallium-drivers= \
             -Dvulkan-drivers=freedreno \
             -Dfreedreno-kmds=kgsl \
